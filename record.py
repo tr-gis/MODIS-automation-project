@@ -20,7 +20,7 @@ def create(datetodownload): This funtion creates a dictionary that contains the 
 
 
 def write(filename,date=''): This function writes the information form the above fucntion into a text file and save it. It stores 
-			information for the tiles in the tiles list defined at the beginnig of the script
+			information for the tiles in the tiles list defined at the beginning of the script
 				ARGUMENTS : filename in quotes ie;'2000.02.18.txt', date in quotes ie;'2000.02.18'
 					by default the date is '' to write infomation about MOD13Q1 homepage
 
