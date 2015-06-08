@@ -34,6 +34,9 @@ def juliandate(filename): This function extracts the julian date from the conten
 
 def listfile(date): This function creates a list file with name = datedate+'_MOD13Q1.txt' which is used by the "modis_download.py"
 				ARGUMENTS : date should be in quotes ie;'2000.02.12'
+
+def completed(date): This function writes the dates downloaded to completed.txt
+			ARGUMENT : date in qoutes ie; '2000.02.18'
 ----------------------------------------------------------------------------------------------------------------------------------	
 '''
 
@@ -172,7 +175,23 @@ def juliandate(filename):
 
 
 
-
+def completed(date):
+	try:
+		if 0!=subprocess.call('ls | grep completed.txt',shell=True):#file doesnot exist
+			os.system("touch completed.txt")
+			fileobject=open('completed.txt',"r+")	
+			fileobject.write(date)
+			fileobject.write('\n')
+			fileobject.close()
+		else:
+		
+			fileobject=open('completed.txt',"r+")	
+			fileobject.write(date)
+			fileobject.write('\n')
+			fileobject.close()
+	except:
+		print "record.completed(): Could not write contents to completed.txt"
+	
 
 
 
