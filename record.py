@@ -7,8 +7,9 @@ from collections import OrderedDict
 
 
 tiles=['h27v08','h27v07','h26v08','h26v07','h26v06','h26v05','h25v08','h25v07','h25v06','h25v05','h24v07','h24v06','h24v05','h23v05','h23v06 h27v06','h24v08','h22v05']
-----------------------------------------------------------------------------------------------------------------------------------
+
 '''
+----------------------------------------------------------------------------------------------------------------------------------
 This file contains the following functions :
 
 def create(datetodownload): This funtion creates a dictionary that contains the scrapped contents of the MODIS webpage
@@ -32,10 +33,11 @@ def juliandate(filename): This function extracts the julian date from the conten
 
 
 def listfile(date): This function creates a list file with name = datedate+'_MOD13Q1.txt' which is used by the "modis_download.py"
-				ARGUMENTS : date should be in quotes ie;'2000.02.12'	
+				ARGUMENTS : date should be in quotes ie;'2000.02.12'
+----------------------------------------------------------------------------------------------------------------------------------	
 '''
 
-----------------------------------------------------------------------------------------------------------------------------------
+
 
 
 def create(datetodownload):
@@ -78,19 +80,25 @@ def create(datetodownload):
 def write(filename,date=''):
 	try:
 		if date=='':
+			
 			if 0!=subprocess.call('ls | grep '+filename,shell=True):#file doesnot exist
 				os.system("touch "+filename)
 				fileobject=open(filename,"r+")
 				b=create('')#creates record of MOD13Q1 home page
 				#pprint.pprint(b, width=1)
 				for data in b:
-					if '.jpg' not in data:
-						for x in tiles:
-							if x in data:
-								fileobject.write(data)	
-								fileobject.write("\t")	
-								fileobject.write(b[data])
-								fileobject.write("\n")
+					fileobject.write(data)	
+					fileobject.write("\n")	
+				fileobject.close()
+			else:#file exits so delete it and create new file
+				os.system('rm '+filename)
+				os.system("touch "+filename)
+				fileobject=open(filename,"r+")
+				b=create('')#creates record of MOD13Q1 home page
+				#pprint.pprint(b, width=1)
+				for data in b:
+					fileobject.write(data)	
+					fileobject.write("\n")	
 				fileobject.close()
 			
 		else :
@@ -146,7 +154,7 @@ def listfile(date):
 							fileobject.write(data)	
 							fileobject.write("\n")
 			fileobject.close()
-			
+		
 		
 	except :
 		print "record.listfile() : Could not write tiles info into "+date+'_MOD13Q1.txt'
