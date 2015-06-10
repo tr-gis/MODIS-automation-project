@@ -32,15 +32,26 @@ for date in newdates:
 	try:
 		subset=[1,1]
 		z=len(subset)
-		Layers=extract.getlayers(date+'.txt')
+		Layers=extract.getlayers(date+'.txt')#returns a list of layers in the product
 		for i in range(0,len(Layers)-z):
 			subset.append(0)
 		
-		
 		textname=extract.get_name("*.txt")
-		mosaic_call='modis_mosaic.py -s "1 1 0 0" -o '+rawpath+'mosaick -v '+rawpath+textname #2
+		mosaic_call='modis_mosaic.py -s "1 1 0 0" -o '+rawpath+'mosaick '+rawpath+textname #2
 		subprocess.call(mosaic_call,shell=True)
+		print colored('Tiles mosaicked successfully for '+date,'green')
 					
 	except:
 		print 'Could not mosaic tiles for '+date
 
+'''	try:
+		vrtfiles=extract.get_name(subset,Layers)#returns the layers corresponding to the subset
+		for x in vrtfiles:
+			vrtfile=extract.get_name(x+'.vrt')
+			convert_call='modis_convert.py -v -s "( 1 1 )" -o '+datapath+'final -e 4326 '+rawpath+'+vrtfile
+			subprocess.call(convert_call,shell=True)
+			subprocess.call('mv '+rawpath+vrtfile+' '+tmppath,shell=True)
+	except:
+		print "Conversion of files for "+date+' failed'
+				
+'''

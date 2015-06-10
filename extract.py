@@ -5,6 +5,7 @@ import subprocess
 datapath='/home/gis-admin/modis/data/' #path to store the .tif files
 tmppath='/home/gis-admin/modis/tmp/' #path to store the .vrt files
 rawpath='/home/gis-admin/modis/raw/' #path to store downloaded files
+libspath='/home/gis-admin/libs/'#path where the scripts are stored
 
 '''def move(subset,layers):
 	#should read the .vrt name from lapers
@@ -26,19 +27,23 @@ def juliandate(filename):
 def get_name(filename,layers=0):
 	try:
 		os.chdir(rawpath)
-		subset=filename
-		'''for i in range(0,len(subset)):
-			if subset[i]==1:
-				do _operation_list '''
+		if layers!=0:
+			subset=filename
+			vrts=[x.split('days')[1].translate(None,'_') for x in layers ]
+			vrtname=[vrts[i] for i in range(0,12) if subset[i]==1]
+			return vrtname
+				
 		
-		if filename=="*.txt":
-			text_name=subprocess.check_output('ls | grep *.txt',shell=True)
+		else :
+			text_name=subprocess.check_output('ls | grep '+filename,shell=True)
 			text_name=text_name.translate(None,'\n')
 			textname=text_name.translate(None,' ')
 			os.rename(text_name,textname)
 			return textname
+		os.chdir(libspath)
 	except (RuntimeError, TypeError, NameError,ValueError):
-		print "can only accept *EVI.vrt or *NDVI.vrt or *.txt"
+		print "extract.get_name(): can not find files with "+filename
+		os.chdir(libspath)
 
 def getlayers(textfilename):
 	
@@ -55,12 +60,15 @@ def getlayers(textfilename):
 		if  len(split)!=len(lay):
 			raise ValueError
 		layers=[x.replace(' ','_') for x in lay] 
+		os.chdir(libspath)
 		return layers
 
 	except ValueError:
 		print "Check the code for extract.getlayers()"
+		os.chdir(libspath)
 	except:
 		print "extract.getlayers(): could not get layer information"
+		os.chdir(libspath)
 
 '''	
 def finalname(layername,juliandate):
