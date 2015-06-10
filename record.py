@@ -6,7 +6,7 @@ import subprocess
 from collections import OrderedDict
 
 
-tiles=['h27v08','h27v07','h26v08','h26v07','h26v06','h26v05','h25v08','h25v07','h25v06','h25v05','h24v07','h24v06','h24v05','h23v05','h23v06 h27v06','h24v08','h22v05']
+tiles=['h27v08','h27v07','h26v08','h26v07','h26v06','h26v05','h25v08','h25v07','h25v06','h25v05','h24v07','h24v06','h24v05','h23v05','h23v06', 'h27v06','h24v08','h22v05']
 
 '''
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -25,10 +25,6 @@ def write(filename,date=''): This function writes the information form the above
 					by default the date is '' to write infomation about MOD13Q1 homepage
 
 def create_dict(filename): This function reads the contents of the text file created in the above function and puts the content 			in to a dictionay. 
-				ARGUMENTS : filename should be in quotes ie;'2000.02.12.txt'
-
-
-def juliandate(filename): This function extracts the julian date from the contents in the text files above. 					ie;'MOD13Q1.A2000049.h22v05.005.2006270085040.hdf', it returns 'A2000049'
 				ARGUMENTS : filename should be in quotes ie;'2000.02.12.txt'
 
 
@@ -84,30 +80,19 @@ def write(filename,date=''):
 	try:
 		if date=='':
 			
-			if 0!=subprocess.call('ls | grep '+filename,shell=True):#file doesnot exist
-				os.system("touch "+filename)
-				fileobject=open(filename,"r+")
-				b=create('')#creates record of MOD13Q1 home page
-				#pprint.pprint(b, width=1)
-				for data in b:
-					fileobject.write(data)	
-					fileobject.write("\n")	
-				fileobject.close()
-			else:#file exits so delete it and create new file
-				os.system('rm '+filename)
-				os.system("touch "+filename)
-				fileobject=open(filename,"r+")
-				b=create('')#creates record of MOD13Q1 home page
-				#pprint.pprint(b, width=1)
-				for data in b:
-					fileobject.write(data)	
-					fileobject.write("\n")	
-				fileobject.close()
-			
+			os.system("touch "+filename)
+			fileobject=open(filename,"w+")
+			b=create('')#creates record of MOD13Q1 home page
+			#pprint.pprint(b, width=1)
+			for data in b:
+				fileobject.write(data)	
+				fileobject.write("\n")	
+			fileobject.close()
+						
 		else :
 			if 0!=subprocess.call('ls | grep '+filename,shell=True):#file doesnot exist
 				os.system("touch "+filename)
-				fileobject=open(filename,"r+")			
+				fileobject=open(filename,"w+")			
 				b=create(date)#creates record of the given date directory in MOD13Q1 
 				#pprint.pprint(b, width=1)
 				for data in b:
@@ -147,7 +132,7 @@ def listfile(date):
 	try:
 		if 0!=subprocess.call('ls | grep '+date+'_MOD13Q1.txt',shell=True):#file doesnot exist
 			os.system("touch "+date+'_MOD13Q1.txt')
-			fileobject=open(date+'_MOD13Q1.txt',"r+")
+			fileobject=open(date+'_MOD13Q1.txt',"w+")
 			b=create(date)#creates record of MOD13Q1 home page
 			#pprint.pprint(b, width=1)
 			for data in b:
@@ -163,32 +148,17 @@ def listfile(date):
 		print "record.listfile() : Could not write tiles info into "+date+'_MOD13Q1.txt'
 
 
-def juliandate(filename):
-	try:
-		read=record.create_dict(filename)
-		for x in read:
-			if 'h26v05' in x :
-				jdate=x.split('.h26v05')[0].split('.')[1]
-		return jdate
-	except :
-		print "extract.juliandate() : could not extract date"
 
 
 
 def completed(date):
 	try:
-		if 0!=subprocess.call('ls | grep completed.txt',shell=True):#file doesnot exist
-			os.system("touch completed.txt")
-			fileobject=open('completed.txt',"r+")	
-			fileobject.write(date)
-			fileobject.write('\n')
-			fileobject.close()
-		else:
+		os.system("touch completed.txt")
+		fileobject=open('completed.txt',"r+")	
+		fileobject.write(date)
+		fileobject.write('\n')
+		fileobject.close()
 		
-			fileobject=open('completed.txt',"r+")	
-			fileobject.write(date)
-			fileobject.write('\n')
-			fileobject.close()
 	except:
 		print "record.completed(): Could not write contents to completed.txt"
 	

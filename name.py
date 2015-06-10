@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-def get_name(filename):
+def get_name(filename,layerarray=0):
 	try:
 		if filename=="*EVI.vrt":
 			evi_name=subprocess.check_output('ls | grep *EVI.vrt',shell=True)
