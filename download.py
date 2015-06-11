@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import os
 import subprocess
 import record
@@ -20,6 +22,8 @@ newdates=[x for x in dates if x not in completed]
 print 'Number of new downloads %d '%len(newdates)
 
 for date in newdates:
+	#print date
+	
 	try:
 		print date
 		subprocess.call('modis_download.py -f '+date+' -O -t h27v08,h27v07,h26v08,h26v07,h26v06,h26v05,h25v08,h25v07,h25v06,h25v05,h24v07,h24v06,h24v05,h23v05,h23v06,h27v06,h24v08,h22v05 -p MOD13Q1.005 '+rawpath,shell=True)#1
@@ -44,7 +48,8 @@ for date in newdates:
 	except:
 		print 'Could not mosaic tiles for '+date
 
-'''	try:
+'''	
+	try:
 		vrtfiles=extract.get_name(subset,Layers)#returns the layers corresponding to the subset
 		for x in vrtfiles:
 			vrtfile=extract.get_name(x+'.vrt')
@@ -53,5 +58,4 @@ for date in newdates:
 			subprocess.call('mv '+rawpath+vrtfile+' '+tmppath,shell=True)
 	except:
 		print "Conversion of files for "+date+' failed'
-				
-'''
+'''				
