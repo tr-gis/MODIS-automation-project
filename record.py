@@ -4,9 +4,11 @@ import requests
 import os
 import subprocess
 from collections import OrderedDict
+productname='MOD11A1.005' #'MOD13Q1.005'
+libspath='/home/gis-admin/libs/'
+#tiles=['h27v08','h27v07','h26v08','h26v07','h26v06','h26v05','h25v08','h25v07','h25v06','h25v05','h24v07','h24v06','h24v05','h23v05','h23v06', 'h27v06','h24v08','h22v05']
 
-
-tiles=['h27v08','h27v07','h26v08','h26v07','h26v06','h26v05','h25v08','h25v07','h25v06','h25v05','h24v07','h24v06','h24v05','h23v05','h23v06', 'h27v06','h24v08','h22v05']
+tiles=['h28v05','h29v05','h28v04']
 
 '''
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -19,8 +21,7 @@ def create(datetodownload): This funtion creates a dictionary that contains the 
 				ARGUMENTS : datetodownload in quotes ie;'2000.02.18'
 
 
-def write(filename,date=''): This function writes the information form the above fucntion into a text file and save it. It stores 
-			information for the tiles in the tiles list defined at the beginning of the script
+def write(filename,date=''): This function writes the information from the above function into a text file and saves it. It 				stores information for the tiles that are in the list defined at the beginning of this script
 				ARGUMENTS : filename in quotes ie;'2000.02.18.txt', date in quotes ie;'2000.02.18'
 					by default the date is '' to write infomation about MOD13Q1 homepage
 
@@ -43,9 +44,9 @@ def create(datetodownload):
 	try:
 		rec={}
 		if datetodownload=='':
-			page = requests.get('http://e4ftl01.cr.usgs.gov/MOLT/MOD13Q1.005/')
+			page = requests.get('http://e4ftl01.cr.usgs.gov/MOLT/'+productname+'/')
 		else :
-			page = requests.get('http://e4ftl01.cr.usgs.gov/MOLT/MOD13Q1.005/'+datetodownload+'/')
+			page = requests.get('http://e4ftl01.cr.usgs.gov/MOLT/'+productname+'/'+datetodownload+'/')
 		tree = html.fromstring(page.text)
 		mod_date = tree.xpath('//pre/text()')
 		t=[x for x in mod_date if x.count('-')>1]
@@ -79,7 +80,7 @@ def create(datetodownload):
 def write(filename,date=''):
 	try:
 		if date=='':
-			
+			os.chdir(libspath)
 			os.system("touch "+filename)
 			fileobject=open(filename,"w+")
 			b=create('')#creates record of MOD13Q1 home page
@@ -90,20 +91,20 @@ def write(filename,date=''):
 			fileobject.close()
 						
 		else :
-			if 0!=subprocess.call('ls | grep '+filename,shell=True):#file doesnot exist
-				os.system("touch "+filename)
-				fileobject=open(filename,"w+")			
-				b=create(date)#creates record of the given date directory in MOD13Q1 
-				#pprint.pprint(b, width=1)
-				for data in b:
-					if '.jpg' not in data:
-						for x in tiles:
-							if x in data:
-								fileobject.write(data)	
-								fileobject.write("\t")	
-								fileobject.write(b[data])
-								fileobject.write("\n")	
-				fileobject.close()
+			os.chdir(libspath)
+			os.system("touch "+filename)
+			fileobject=open(filename,"w+")			
+			b=create(date)#creates record of the given date directory in MOD13Q1 
+			#pprint.pprint(b, width=1)
+			for data in b:
+				if '.jpg' not in data:
+					for x in tiles:
+						if x in data:
+							fileobject.write(data)	
+							fileobject.write("\t")	
+							fileobject.write(b[data])
+							fileobject.write("\n")	
+			fileobject.close()
 
 	except :
 		print "record.write() : Could not write record into "+filename
@@ -114,6 +115,7 @@ def create_dict(filename):
 	
 	try:	
 		a={}
+		os.chdir(libspath)
 		text=open(filename,"r")
 		text.seek(0,0)
 		line=text.readlines()
@@ -153,6 +155,7 @@ def listfile(date):
 
 def completed(date):
 	try:
+		os.chdir(libspath)		
 		os.system("touch completed.txt")
 		fileobject=open('completed.txt',"r+")	
 		fileobject.write(date)

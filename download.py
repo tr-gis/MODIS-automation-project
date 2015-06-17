@@ -24,15 +24,15 @@ print 'Number of new downloads %d '%len(newdates)
 for date in newdates:
 	#print date
 	
-	try:
+	try:	
 		print date
-		subprocess.call('modis_download.py -f '+date+' -O -t h27v08,h27v07,h26v08,h26v07,h26v06,h26v05,h25v08,h25v07,h25v06,h25v05,h24v07,h24v06,h24v05,h23v05,h23v06,h27v06,h24v08,h22v05 -p MOD13Q1.005 '+rawpath,shell=True)#1
+		subprocess.call('modis_download.py -f '+date+' -O -t h28v05,h29v05,h28v04 '+rawpath,shell=True)#1
 		print colored('Tiles downloaded successfully for '+date,'green')
 		record.write(date+'.txt',date)#contains list of .hdf and .xml files downloaded on the 'date'
 		record.completed(date)#add the downloaded date to completed list
 	except:
 		print 'Download of tiles for '+date+' failed'
-
+	
 	try:
 		subset=[1,1]
 		z=len(subset)
@@ -41,21 +41,23 @@ for date in newdates:
 			subset.append(0)
 		
 		textname=extract.get_name("*.txt")
-		mosaic_call='modis_mosaic.py -s "1 1 0 0" -o '+rawpath+'mosaick '+rawpath+textname #2
+		#modis_mosaic.py -s "1" -o /tmp/mosaik -v /tmp/listfileMOD11A1.005.txt
+		mosaic_call='modis_mosaic.py -s "1 1 0 0" -o '+rawpath+'mosaick -v '+rawpath+textname #2
 		subprocess.call(mosaic_call,shell=True)
 		print colored('Tiles mosaicked successfully for '+date,'green')
 					
 	except:
 		print 'Could not mosaic tiles for '+date
 
-'''	
+	
 	try:
 		vrtfiles=extract.get_name(subset,Layers)#returns the layers corresponding to the subset
 		for x in vrtfiles:
 			vrtfile=extract.get_name(x+'.vrt')
-			convert_call='modis_convert.py -v -s "( 1 1 )" -o '+datapath+'final -e 4326 '+rawpath+'+vrtfile
+			convert_call='modis_convert.py -v -s "( 1 1 )" -o '+datapath+date+'final -e 4326 '+rawpath+vrtfile
 			subprocess.call(convert_call,shell=True)
 			subprocess.call('mv '+rawpath+vrtfile+' '+tmppath,shell=True)
+		print '.tif file conversion successful for '+date
 	except:
 		print "Conversion of files for "+date+' failed'
-'''				
+				
