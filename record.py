@@ -4,11 +4,12 @@ import requests
 import os
 import subprocess
 from collections import OrderedDict
-productname='MOD11A1.005' #'MOD13Q1.005'
+productname='MOD13Q1.005' 
+#'MOD11A1.005'
 libspath='/home/gis-admin/libs/'
-#tiles=['h27v08','h27v07','h26v08','h26v07','h26v06','h26v05','h25v08','h25v07','h25v06','h25v05','h24v07','h24v06','h24v05','h23v05','h23v06', 'h27v06','h24v08','h22v05']
+tiles=['h27v08','h27v07','h26v08','h26v07','h26v06','h26v05','h25v08','h25v07','h25v06','h25v05','h24v07','h24v06','h24v05','h23v05','h23v06', 'h27v06','h24v08','h22v05']
 
-tiles=['h28v05','h29v05','h28v04']
+#tiles=['h28v05','h29v05','h28v04']
 
 '''
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -83,7 +84,7 @@ def write(filename,date=''):
 			os.chdir(libspath)
 			os.system("touch "+filename)
 			fileobject=open(filename,"w+")
-			b=create('')#creates record of MOD13Q1 home page
+			b=create('')#creates record of product home page
 			#pprint.pprint(b, width=1)
 			for data in b:
 				fileobject.write(data)	
