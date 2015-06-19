@@ -27,7 +27,7 @@ print 'Number of new downloads %d '%len(newdates)
 for date in newdates:
 	#print date
 	
-	try:	
+	try:#download the .hdf and .xml files	
 		print date
 		subprocess.call('modis_download.py -f '+date+' -O -p '+productname+' -t '+tiles+rawpath,shell=True)#1
 		print colored('Tiles downloaded successfully for '+date,'green')
@@ -36,7 +36,7 @@ for date in newdates:
 	except:
 		print 'Download of tiles for '+date+' failed'
 	
-	try:
+	try:#mosaicks the files
 		
 		z=len(subset)
 		Layers=extract.getlayers(date+'.txt')#returns a list of layers in the product
@@ -47,19 +47,24 @@ for date in newdates:
 		#modis_mosaic.py -s "1" -o /tmp/mosaik -v /tmp/listfileMOD11A1.005.txt
 		mosaic_call='modis_mosaic.py -s "1 1 0 0" -o '+rawpath+' -v '+rawpath+textname #2
 		subprocess.call(mosaic_call,shell=True)
+		for x in os.listdir(rawpath):
+			if x.endswith('.vrt'):
+				n=x.replace(' ','_')
+				os.rename(x,n)
 		print colored('Tiles mosaicked successfully for '+date,'green')
 					
 	except:
 		print 'Could not mosaic tiles for '+date
 
 	
-	try:
+	try:#converts into tif files
 		vrtfiles=extract.get_name(subset,Layers)#returns the layers corresponding to the subset
+		julian=extract.juliandate(date+'.txt')		
 		for x in vrtfiles:
 			vrtfile=extract.get_name(x+'.vrt')
 			convert_call='modis_convert.py -v -s "( 1 )" -o '+datapath+date+'final -e 4326 '+rawpath+vrtfile
 			subprocess.call(convert_call,shell=True)
-			subprocess.call('mv '+datapath+date+'final.tif'+' '+datapath+vrtfile+date+'.tif',shell=True)
+			subprocess.call('mv '+datapath+date+'final.tif'+' '+datapath+productname+'-'+x+'-'+julian+'-'+date+'.tif',shell=True)
 			subprocess.call('mv '+rawpath+vrtfile+' '+tmppath,shell=True)
 		print colored('.tif file conversion successful for '+date,'green')		
 		
@@ -67,7 +72,7 @@ for date in newdates:
 		print colored('.tif file conversion for '+date+' failed','red')
 	
 
-	try:
+	try:#creates a .xml file for the mosicked file
 		rec=record.create_dict(date+'.txt')
 		parse_call='modis_multiparse.py -w new.xml'
 		for x in rec:
@@ -76,10 +81,10 @@ for date in newdates:
 		os.chdir(rawpath)
 		subprocess.call(parse_call,shell=True)
 		os.chdir(libspath)
-		subprocess.call('mv '+rawpath+'new.xml'+' '+datapath+date+'.xml',shell=True)
+		subprocess.call('mv '+rawpath+'new.xml'+' '+datapath+productname+'-'+julian+'-'+date+'.xml',shell=True)
 		print colored('xml file for mosaic of '+date+' created','green')
 	except:
 		print colored('xml file for mosaic of '+date+' could NOT BE created','red')		
 		
 
-	exit()				
+	#exit()				

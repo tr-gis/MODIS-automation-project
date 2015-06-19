@@ -12,7 +12,7 @@ libspath='/home/gis-admin/libs/'#path where the scripts are stored
 
 '''
 
-def juliandate(filename):
+def juliandate(filename):#get the julian dates of the files
 	try:
 		read=record.create_dict(filename)
 		for x in read:
@@ -24,7 +24,7 @@ def juliandate(filename):
 
 
 
-def get_name(filename,layers=0):
+def get_name(filename,layers=0):#find the name of the vrt files and text files as stored in the directory
 	try:
 		
 		if layers!=0:
@@ -40,7 +40,7 @@ def get_name(filename,layers=0):
 			os.chdir(rawpath)
 			text_name=subprocess.check_output('ls | grep '+filename,shell=True)
 			text_name=text_name.translate(None,'\n')
-			textname=text_name.translate(None,' ')
+			textname=text_name.replace(' ','_')
 			os.rename(text_name,textname)
 			return textname
 		
@@ -48,7 +48,7 @@ def get_name(filename,layers=0):
 		print "extract.get_name(): can not find files with "+filename
 		
 
-def getlayers(textfilename):
+def getlayers(textfilename):#gets the layers in the hdf file
 	
 	try:
 		os.chdir(libspath)
