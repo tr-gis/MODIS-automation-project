@@ -86,5 +86,5 @@ for date in newdates:
 	except:
 		print colored('xml file for mosaic of '+date+' could NOT BE created','red')		
 		
-
+	record.completed(date)
 	#exit()				

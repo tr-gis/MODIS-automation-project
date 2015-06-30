@@ -158,9 +158,8 @@ def completed(date):
 	try:
 		os.chdir(libspath)		
 		os.system("touch completed.txt")
-		fileobject=open('completed.txt',"r+")	
-		fileobject.write(date)
-		fileobject.write('\n')
+		fileobject=open('completed.txt',"a")	
+		fileobject.write(date+' \n')
 		fileobject.close()
 		
 	except:
