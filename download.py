@@ -32,7 +32,7 @@ for date in newdates:
 		subprocess.call('modis_download.py -f '+date+' -O -p '+productname+' -t '+tiles+rawpath,shell=True)#1
 		print colored('Tiles downloaded successfully for '+date,'green')
 		record.write(date+'.txt',date)#contains list of .hdf and .xml files downloaded on the 'date'
-		record.completed(date)#add the downloaded date to completed list
+		
 	except:
 		print 'Download of tiles for '+date+' failed'
 	

@@ -7,9 +7,17 @@ tmppath='/home/gis-admin/modis/tmp/' #path to store the .vrt files
 rawpath='/home/gis-admin/modis/raw/' #path to store downloaded files
 libspath='/home/gis-admin/libs/'#path where the scripts are stored
 
-'''def move(subset,layers):
-	#should read the .vrt name from lapers
+'''
+-----------------------------------------------------------------------------------------------------------------------------------
+def juliandate(filename) : finds the juilan date. 'filename' should be the date.txt file ie; say 2000.02.18.txt
 
+def get_name(filename,layers=0): this function returns the name of the file type supplied. When the 'filename' is '.txt' then it 					searches for files of the extension '.txt' and returns their name.
+				When called with the layers specified, it returns the name of the layer corresponding to the subset
+
+def getlayers(textfilename): finds all the layers the are in the .hdf files. 'textfilename' should be the date.txt file ie; say 
+				2000.02.18.txt
+
+-----------------------------------------------------------------------------------------------------------------------------------
 '''
 
 def juliandate(filename):#get the julian dates of the files
@@ -73,13 +81,4 @@ def getlayers(textfilename):#gets the layers in the hdf file
 	except:
 		print "extract.getlayers(): could not get layer information"
 		
-
-'''	
-def finalname(layername,juliandate):
-	os.system(mv tifffile/to/final/location)
-	os.chdir(path/to/save/tifffile)
-	convert julian date to standard
-	newname='MOD13Q1'+layername+juliandate+standarddate.'tif'
-	os.rename(source,newname)
-'''	
 
